@@ -14,7 +14,16 @@ polls using the iron-ajax element at a given frequency
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+      
+     <iron-ajax auto 
+      url="https://opendata.paris.fr/api/records/1.0/search/?dataset=stations-velib-disponibilites-en-temps-reel&rows={{maxRows}}&facet=status&geofilter.distance=48.863743%2C2.344306%2C{{resultsRadius}}"
+      handle-as="json"
+      id="ajaxCall"
+      last-response="{{ajaxResponse}}"
+      on-response="handleResponse"
+      debounce-duration="300">
+    </iron-ajax>
+
   </template>
 
   <script>
@@ -23,11 +32,32 @@ polls using the iron-ajax element at a given frequency
       is: 'iron-polling',
 
       properties: {
-        prop1: {
-          type: String,
-          value: 'iron-polling',
+        lastPoll: {
+            type: Object,
+            value: null
         },
+        pollingFrequency: {
+          type: int,
+          value: 100
+        }
       },
+
+      ready: function(){
+         this.refreshLastPoll();
+      },
+
+      handleResponse: function() {
+          this.async(function() {
+              this.$.ajaxCall.generateRequest();
+              this.refreshLastPoll();
+          }, this.pollingFrequency*1000);
+      },
+
+      refreshLastPoll: function(){
+          var d = new Date();
+          d.setSeconds(d.getSeconds()-150);
+          this.lastPoll = d;
+      }
 
     });
   </script>

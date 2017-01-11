@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`iron-polling`
+polls using the iron-ajax element at a given frequency
+
+@demo demo/index.html 
+-->
+
+<dom-module id="iron-polling">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'iron-polling',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'iron-polling',
+        },
+      },
+
+    });
+  </script>
+</dom-module>

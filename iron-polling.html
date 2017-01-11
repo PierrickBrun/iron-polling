@@ -4,20 +4,21 @@
 `iron-polling`
 polls using the iron-ajax element at a given frequency
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="iron-polling">
-  <template>
+    <template>
     <style>
       :host {
         display: block;
       }
     </style>
-      
-     <iron-ajax auto 
-      url="https://opendata.paris.fr/api/records/1.0/search/?dataset=stations-velib-disponibilites-en-temps-reel&rows={{maxRows}}&facet=status&geofilter.distance=48.863743%2C2.344306%2C{{resultsRadius}}"
-      handle-as="json"
+
+     <iron-ajax auto
+      url="{{url}}"
+      params="{{params}}"
+      handle-as="{{handle-as}}"
       id="ajaxCall"
       last-response="{{ajaxResponse}}"
       on-response="handleResponse"
@@ -26,39 +27,68 @@ polls using the iron-ajax element at a given frequency
 
   </template>
 
-  <script>
-    Polymer({
+    <script>
+        Polymer({
 
-      is: 'iron-polling',
+            is: 'iron-polling',
 
-      properties: {
-        lastPoll: {
-            type: Object,
-            value: null
-        },
-        pollingFrequency: {
-          type: int,
-          value: 100
-        }
-      },
+            properties: {
+                lastPollingDate: {
+                    type: Date,
+                    value: null
+                },
+                pollingFrequency: {
+                    type: Number,
+                    value: 10
+                },
+                url: {
+                    type: String
+                },
+                params: {
+                    type: Object,
+                    value: function() {
+                        return {};
+                    }
+                },
+                handleAs: {
+                    type: String,
+                    value: 'json'
+                },
+                timeout: {
+                    type: Number,
+                    value: 0
+                },
+                lastResponse: {
+                    type: Object,
+                    notify: true,
+                    readOnly: true
+                },
+                lastError: {
+                    type: Object,
+                    notify: true,
+                    readOnly: true
+                }
+            },
 
-      ready: function(){
-         this.refreshLastPoll();
-      },
+            ready: function() {
+                this.refreshLastPoll();
+            },
 
-      handleResponse: function() {
-          this.async(function() {
-              this.$.ajaxCall.generateRequest();
-              this.refreshLastPoll();
-          }, this.pollingFrequency*1000);
-      },
+            handleResponse: function() {
+                this.async(function() {
+                    this.poll();
+                }, this.pollingFrequency * 1000);
+            },
 
-      refreshLastPoll: function(){
-          var d = new Date();
-          d.setSeconds(d.getSeconds()-150);
-          this.lastPoll = d;
-      }
+            poll: function() {
+                this.$.ajaxCall.generateRequest();
+                this.refreshLastPoll();
+            },
 
-    });
-  </script>
+            refreshLastPoll: function() {
+                this.lastPoll = new Date();
+            }
+
+        });
+    </script>
 </dom-module>

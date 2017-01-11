@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
@@ -10,21 +11,62 @@
     <script src="../../web-component-tester/browser.js"></script>
 
     <link rel="import" href="../iron-polling.html">
-  </head>
-  <body>
+</head>
+
+<body>
     <test-fixture id="basic">
-      <template>
+        <template>
         <iron-polling></iron-polling>
       </template>
     </test-fixture>
 
     <script>
-      suite('iron-polling', function() {
-        test('instantiating the element works', function() {
-          var element = fixture('basic');
-          assert.equal(element.is, 'iron-polling');
+        suite('iron-polling', function() {
+            var ajax;
+            var request;
+            var server;
+            var responseHeaders = {
+                json: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            setup(function() {
+                server = sinon.fakeServer.create();
+                server.respondWith(
+                    'GET',
+                    /\/responds_to_get_with_json.*/, [
+                        200,
+                        responseHeaders.json,
+                        '{"success":true}'
+                    ]
+                );
+            });
+            teardown(function() {
+                server.restore();
+            });
+            suite('when making simple GET requests for JSON', function() {
+                setup(function() {
+                    // get fresh instance of iron-polling before every test
+                    ajax = fixture('basic');
+                });
+                test('has sane defaults that love you', function() {
+                    request = ajax.poll();
+                    server.respond();
+                    expect(request.response).to.be.ok;
+                    expect(request.response).to.be.an('object');
+                    expect(request.response.success).to.be.equal(true);
+                });
+                test('has the correct xhr method', function() {
+                    request = ajax.poll();
+                    expect(request.xhr.method).to.be.equal('GET');
+                });
+            });
+            test('instantiating the element works', function() {
+                var element = fixture('basic');
+                assert.equal(element.is, 'iron-polling');
+            });
         });
-      });
     </script>
-  </body>
+</body>
+
 </html>

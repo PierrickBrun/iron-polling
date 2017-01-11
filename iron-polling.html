@@ -70,21 +70,25 @@ polls using the iron-ajax element at a given frequency
             observers: ['_requestOptionsChanged(url, method, params, headers,contentType, body, sync, handleAs, withCredentials, auto)'],
 
             ready: function() {
+                console.log('ready');
                 this.refreshLastPoll();
             },
 
             handleResponse: function() {
+              console.log('handleResponse');
                 this.async(function() {
                     this.poll();
                 }, this.pollingFrequency * 1000);
             },
 
             poll: function() {
+              console.log('poll');
                 this.$.ajaxCall.generateRequest();
                 this.refreshLastPoll();
             },
 
             refreshLastPoll: function() {
+              console.log('refreshLastPoll');
                 this.lastPoll = new Date();
             }
 

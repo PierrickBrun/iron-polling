@@ -17,7 +17,7 @@ polls using the iron-ajax element at a given frequency
         params="{{params}}"
         handle-as="{{handleAs}}"
         id="ajaxCall"
-        last-response="{{ajaxResponse}}"
+        last-response="{{lastResponse}}"
         on-response="handleResponse"
         debounce-duration="300">
       </iron-ajax>
@@ -66,6 +66,8 @@ polls using the iron-ajax element at a given frequency
                     readOnly: true
                 }
             },
+
+            observers: ['_requestOptionsChanged(url, method, params, headers,contentType, body, sync, handleAs, withCredentials, auto)'],
 
             ready: function() {
                 this.refreshLastPoll();

@@ -7,23 +7,20 @@ polls using the iron-ajax element at a given frequency
 @demo demo/index.html
 -->
 
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
 <dom-module id="iron-polling">
     <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
 
-     <iron-ajax auto
-      url="{{url}}"
-      params="{{params}}"
-      handle-as="{{handle-as}}"
-      id="ajaxCall"
-      last-response="{{ajaxResponse}}"
-      on-response="handleResponse"
-      debounce-duration="300">
-    </iron-ajax>
+       <iron-ajax auto
+        url="{{url}}"
+        params="{{params}}"
+        handle-as="{{handleAs}}"
+        id="ajaxCall"
+        last-response="{{ajaxResponse}}"
+        on-response="handleResponse"
+        debounce-duration="300">
+      </iron-ajax>
 
   </template>
 

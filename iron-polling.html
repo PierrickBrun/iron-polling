@@ -78,7 +78,6 @@ polls using the iron-ajax element at a given frequency
             },
 
             handleResponse: function() {
-                this.status = 'awaiting';
                 console.log('handleResponse');
                 this.async(function() {
                     this.poll();
@@ -94,6 +93,7 @@ polls using the iron-ajax element at a given frequency
                     }
                 ).then({
                     function(val) {
+                      this.status = 'awaiting';
                         this.refreshLastPoll();
                     }
                 });

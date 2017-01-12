@@ -30,6 +30,11 @@ polls using the iron-ajax element at a given frequency
             is: 'iron-polling',
 
             properties: {
+                status: {
+                    type: String,
+                    value: 'awaiting',
+                    notify: true
+                },
                 lastPollingDate: {
                     type: Date,
                     value: null
@@ -73,8 +78,8 @@ polls using the iron-ajax element at a given frequency
             },
 
             handleResponse: function() {
-                console.log('handleResponse'+this.lastResponse);
-
+                this.status = 'awaiting';
+                console.log('handleResponse');
                 this.async(function() {
                     this.poll();
                 }, this.pollingFrequency * 1000);
@@ -82,8 +87,16 @@ polls using the iron-ajax element at a given frequency
 
             poll: function() {
                 console.log('poll');
-                this.$.ajaxCall.generateRequest();
-                this.refreshLastPoll();
+                return new Promise(
+                    function(resolve, reject) {
+                        this.status = 'calling';
+                        resolve(this.$.ajaxCall.generateRequest());
+                    }
+                ).then({
+                    function(val) {
+                        this.refreshLastPoll();
+                    }
+                });
             },
 
             refreshLastPoll: function() {

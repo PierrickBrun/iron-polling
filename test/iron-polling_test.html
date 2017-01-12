@@ -50,15 +50,19 @@
                     ajax = fixture('basic');
                 });
                 test('has sane defaults that love you', function() {
-                    request = ajax.poll();
-                    server.respond();
-                    expect(request.response).to.be.ok;
-                    expect(request.response).to.be.an('object');
-                    expect(request.response.success).to.be.equal(true);
+                    ajax.poll().then(
+                        function(response) {
+                            response = ajax.lastResponse;
+                            server.respond();
+                            expect(response).to.be.ok;
+                            expect(response).to.be.an('object');
+                            expect(response.success).to.be.equal(true);
+                        });
                 });
                 test('has the correct xhr method', function() {
-                    request = ajax.poll();
-                    expect(request.xhr.method).to.be.equal('GET');
+                    ajax.poll();
+                    response = ajax.lastResponse;
+                    expect(xhr.method).to.be.equal('GET');
                 });
             });
             test('instantiating the element works', function() {

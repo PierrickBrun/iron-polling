@@ -94,7 +94,7 @@ polls using the iron-ajax element at a given frequency
                     function(val) {
                         this.status = 'awaiting';
                         this.refreshLastPoll();
-                    });
+                    }.bind(this));
             },
 
             refreshLastPoll: function() {

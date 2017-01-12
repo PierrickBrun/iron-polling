@@ -86,10 +86,10 @@ polls using the iron-ajax element at a given frequency
 
             poll: function() {
                 console.log('poll');
-                var promise = new Promise(
+                return new Promise(
                     function(resolve, reject) {
                         this.status = 'calling';
-                        resolve(this.$.ajaxCall.generateRequest());
+                        resolve(this.$.ajaxCall.generateRequest()).bind(this);
                     }
                 ).then({
                     function(val) {
@@ -97,7 +97,6 @@ polls using the iron-ajax element at a given frequency
                         this.refreshLastPoll();
                     }
                 });
-                return promise.bind(this);
             },
 
             refreshLastPoll: function() {

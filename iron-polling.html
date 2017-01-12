@@ -90,7 +90,7 @@ polls using the iron-ajax element at a given frequency
                     this.status = 'calling';
                     var ajaxCall = this.$.ajaxCall();
                     resolve(ajaxCall.generateRequest());
-                }).bind(this).then(
+                }.bind(this)).then(
                     function(val) {
                         this.status = 'awaiting';
                         this.refreshLastPoll();
